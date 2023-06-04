@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent implements OnInit {
   title: string = 'Dating App';
   users: any;
 
-  constructor(private http: HttpClient, private accountService: AccountService){}
+  constructor(private http: HttpClient, private accountService: AccountService, private toast: NgToastService){}
 
   ngOnInit(): void {
     
@@ -34,5 +35,8 @@ export class AppComponent implements OnInit {
     if(!userString) return;
     const user: User = JSON.parse(userString);
     this.accountService.setCurrentUser(user);
+  }
+  test(){
+    this.toast.success({detail:"ERROR",summary:'Login failed! Try again.', duration: 5000});
   }
 }
