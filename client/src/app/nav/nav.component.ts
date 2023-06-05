@@ -32,9 +32,9 @@ export class NavComponent implements OnInit{
         this.toast.success({detail:"SUCCESS",summary:'Login Sucess!', duration: 5000});
       },
       error: error =>  {
-      console.log("error: ", error);
+      console.log("error client side log: ", error);
 
-      this.toast.error({detail:"ERROR",summary:'Login failed! Try again.', duration: 5000});
+    //  this.toast.error({detail:"ERROR",summary:'Login failed! Try again.', duration: 5000});
 
     }
     })
