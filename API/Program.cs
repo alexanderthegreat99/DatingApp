@@ -28,4 +28,22 @@ app.UseAuthorization();  // asnwers: ok you have a valid token but what are you 
 
 app.MapControllers();
 
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<DataContext>();
+   // var userManager = services.GetRequiredService<UserManager<AppUser>>();
+   // var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    await context.Database.MigrateAsync();
+    //await Seed.ClearConnections(context);
+    await Seed.SeedUsers(context);
+}
+catch (Exception ex)
+{
+    var logger = services.GetService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred during migration");
+}
+
+
 app.Run();
