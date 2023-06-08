@@ -4,6 +4,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgToastModule } from 'ng-angular-popup';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryAction, NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -13,13 +14,17 @@ import { NgxGalleryAction, NgxGalleryModule } from '@kolkov/ngx-gallery';
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     NgToastModule,
-    NgxGalleryModule
+    NgxGalleryModule,
+    NgxSpinnerModule.forRoot({
+      type: 'line-scale-party'
+    })
   ],
   exports: [
     BsDropdownModule,
     NgToastModule,
     TabsModule,
-    NgxGalleryModule
+    NgxGalleryModule,
+    NgxSpinnerModule
   ]
 })
 export class SharedModule { }
