@@ -3,6 +3,7 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgToastService } from 'ng-angular-popup';
 import { Member } from 'src/app/_models/member';
 import { MembersService } from 'src/app/_services/members.service';
+import { PresenceService } from 'src/app/_services/presence.service';
 
 @Component({
   selector: 'app-member-card',
@@ -12,7 +13,8 @@ import { MembersService } from 'src/app/_services/members.service';
 export class MemberCardComponent implements OnInit {
   @Input() member: Member | undefined;
 
-  constructor(private memberService: MembersService, private toast: NgToastService) { }
+  constructor(private memberService: MembersService, private toast: NgToastService, 
+    public presenceService: PresenceService) { }
 
   ngOnInit(): void {
   }
