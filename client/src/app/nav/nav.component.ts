@@ -30,6 +30,7 @@ export class NavComponent implements OnInit{
         console.log(response);
         this.router.navigateByUrl('/members')
         this.toast.success({detail:"SUCCESS",summary:'Login Sucess!', duration: 5000});
+        this.model = {};
       },
       error: error =>  {
       console.log("error client side log: ", error);
