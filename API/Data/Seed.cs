@@ -40,16 +40,24 @@ namespace API.Data
                 await roleManager.CreateAsync(role);
             }
 
+            // foreach (var user in users)
+            // {
+            //     // using var hmac = new HMACSHA512();
+
+            //     user.UserName = user.UserName.ToLower();
+
+            //     await userManager.CreateAsync(user, "Pa$$w0rd");
+
+            //     await userManager.AddToRoleAsync(user, "Member");
+            // }
             foreach (var user in users)
             {
-                // using var hmac = new HMACSHA512();
-
+                user.Photos.First().IsApproved = true;
                 user.UserName = user.UserName.ToLower();
-
                 await userManager.CreateAsync(user, "Pa$$w0rd");
-
                 await userManager.AddToRoleAsync(user, "Member");
             }
+
 
             var admin = new AppUser
             {
@@ -57,7 +65,7 @@ namespace API.Data
             };
 
             await userManager.CreateAsync(admin, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(admin, new[] {"Admin", "Moderator"});
+            await userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" });
 
         }
     }

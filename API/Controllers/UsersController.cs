@@ -16,35 +16,35 @@ namespace API.Controllers
     public class UsersController : BaseApiController
     {
 
-       
+
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
-         private readonly IUnitOfWork _uow;
-         public UsersController(IUnitOfWork uow, IMapper mapper, 
-             IPhotoService photoService)
+        private readonly IUnitOfWork _uow;
+        public UsersController(IUnitOfWork uow, IMapper mapper,
+            IPhotoService photoService)
         {
             _uow = uow;
 
             _mapper = mapper;
-            
+
             _photoService = photoService;
         }
 
-        
+
         [HttpGet]
-        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
+        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
             var gender = await _uow.UserRepository.GetUserGender(User.GetUsername());
             userParams.CurrentUsername = User.GetUsername();
 
-             if (string.IsNullOrEmpty(userParams.Gender))
-             {
-                 userParams.Gender = gender == "male" ? "female" : "male";
-             }
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = gender == "male" ? "female" : "male";
+            }
 
             var users = await _uow.UserRepository.GetMembersAsync(userParams);
 
-            Response.AddPaginationHeader(new PaginationHeader (users.CurrentPage, users.PageSize, 
+            Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize,
                 users.TotalCount, users.TotalPages));
 
 
@@ -52,13 +52,22 @@ namespace API.Controllers
 
         }
         //[Authorize(Roles = "Member")] this is role based authorization
+        // [HttpGet("{username}")]
+        // public async Task<ActionResult<MemberDto>> GetUser(string username)
+        // {
+        //     return await _uow.UserRepository.GetMemberAsync(username);
+
+
+        // }
         [HttpGet("{username}")]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            return await _uow.UserRepository.GetMemberAsync(username);
-
-
+            var currentUsername = User.GetUsername();
+            return await _uow.UserRepository.GetMemberAsync(username,
+                isCurrentUser: currentUsername == username
+            );
         }
+
         [HttpPut]
         public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
         {
@@ -91,7 +100,7 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
 
-            if (user.Photos.Count == 0) photo.IsMain = true;
+            //if (user.Photos.Count == 0) photo.IsMain = true;
 
             user.Photos.Add(photo);
 
@@ -131,7 +140,9 @@ namespace API.Controllers
         {
             var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
 
-            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+            //var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            var photo = await _uow.PhotoRepository.GetPhotoById(photoId);
 
             if (photo == null) return NotFound();
 
